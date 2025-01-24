@@ -4,6 +4,7 @@
     display: flex;
     margin: auto;
     padding: 0px 140px;
+    margin-top: 50px;
     margin-bottom: 150px;
     background: linear-gradient(180deg, #fde1ff 0%, #e1ffea22 60%);
 }
@@ -45,5 +46,4 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    padding-bottom: 50px;
 }

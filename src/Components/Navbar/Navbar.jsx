@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import { useContext, useState } from 'react'
 import './Navbar.css'
 import logo from '../Assets/logo.png'
 import cart_icon from '../Assets/cart_icon.png'
@@ -14,7 +14,7 @@ function Navbar() {
     <div className='navbar'>
         <div className="nav-logo">
             <img src={logo} alt="" />
-            <p>SHOPME</p>
+            <Link style={{textDecoration: 'none'}} to='/'><p>SHOPME</p></Link>
         </div>
         <ui className="nav-menu">
             <li onClick={()=>{setMenu('shop')}}><Link style={{ textDecoration: 'none' }} to='/'>Shop</Link>{menu==="shop"?<hr/>:<></>}</li>

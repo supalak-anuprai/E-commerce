@@ -1,4 +1,5 @@
-import React, {createContext, useState} from 'react'
+import {createContext, useState} from 'react'
+import axios from 'axios'
 import all_product from '../Components/Assets/all_product'
 
 export const ShopContext = createContext(null)
@@ -7,6 +8,7 @@ const getDefaultCart = () => {
     let cart = {}
 
     for (let index = 0; index < all_product.length + 1; index++) {
+
         cart[index] = 0;
 
     }
@@ -24,14 +26,18 @@ const ShopContextProvider = (props) => {
     }
 
     const removeFromCart = (itemId) => {
+
         setCartItems((prev) => ({...prev, [itemId]: prev[itemId] - 1}))
+
 
     }
 
     const getTotalCartAmount = () => {
+
         let totalAmount = 0;
 
         for(const item in cartItems){
+            
             if(cartItems[item] > 0){
                 let itemInfo = all_product.find((products) => products.id === Number(item))
                 totalAmount += (itemInfo.new_price * cartItems[item])
@@ -84,8 +90,10 @@ const ShopContextProvider = (props) => {
         const { name, value, type, checked } = e.target;
 
         setFormData((prev) => ({
+
             ...prev,
             [name]: type === "checkbox" ? checked : value
+
         }));
     };
 
@@ -96,62 +104,114 @@ const ShopContextProvider = (props) => {
         console.log(e.target.dataset.type)
 
         try {
-            if(formData.checkbox && formData.fname && formData.lname && formData.email && formData.password){
-                const response = await fetch(`http://localhost:5174/register`, {
-                     method: "POST", // or 'PUT'
-                    headers: {
-                    "Content-Type": "application/json",
-                },
-                    body: JSON.stringify(formData)
-                });
+            
+            if(e.target.dataset.type === 'register'){
 
-                const result = await response.json()
+                if(formData.checkbox && formData.fname && formData.lname && formData.email && formData.password){
 
-                if(result.status == 'OK'){
-                    alert('Sig Up Success 😍')
-                    window.location = '/login'
+                    const response = await axios.post(`http://localhost:5174/register`, formData, {
+                        withCredentials: true,
+                    })
+                    console.log(response.data)
+                    if(response.data.status == 'OK'){
+                        
+                        alert('Sig Up Success 😍')
+    
+                        window.location = '/login'
+    
+                    }
+
+                    else if(response.data.message.code == "ER_DUP_ENTRY"){
+                        alert('Email นี้มีผู้ใช้งานแล้ว กรุณาใช้ Email ใหม่ครับ')
+                    }
+    
                 }
-                return;
+
+                else if(!formData.checkbox){
+
+                    throw new Error('no checkbox reg')
+
+                }
+
+                else if(!formData.fname|| !formData.lname){
+
+                    throw new Error('no name reg')
+
+                }
+
+                else if(!formData.email || !formData.password){
+
+                    throw new Error('no email,password reg')
+
+                }
+
             }
 
-            else if(!formData.checkbox){
-                throw new Error('no checkbox')
-            }
+            else if(e.target.dataset.type === 'login'){
 
-            else if(!formData.fname || !formData.lname){
-                throw new Error('no name')
-            }
+                if(formData.fname && formData.email && formData.password){
 
-            else if(!formData.email){
-                throw new Error('no email')
-            }
+                    const response = await axios.post(`http://localhost:5174/login`,  formData)
 
-            else if(!formData.password){
-                throw new Error('no passaword')
+                    if(response.data.status == 'OK'){
+
+                        alert('Login Success 😍')
+                        // window.location = '/'
+    
+                    }
+
+                    else if(response.data.message == 'no user'){
+                        alert('กรุณาตรวจสอบ ชื่อจริงและ Email ด้วยครับ')
+                    }
+
+                    else if(response.data.status == 'ERROR'){
+                        alert('กรุณาตรวจสอบ Password ด้วยครับ')
+                    }
+    
+                }
+
+                else if(!formData.fname){
+
+                    throw new Error('no name log')
+
+                }
+
+                else if(!formData.email || !formData.password){
+
+                    throw new Error('no email,password log')
+
+                }
+
             }
 
         } 
 
-        catch (error) {
+        catch (err) {
 
-            if(error.message == 'no checkbox'){
-                alert('กรุณาติ๊ก checkbox')
+            console.log(err)
+
+            if(err.message === 'no checkbox reg'){
+                alert('กรุณาติ๊ก Checkbox ด้วยครับ')
             }
 
-            else if(error.message == 'no name'){
-                alert('กรุณากรอก ชื่อและนาสกุล ให้ครบถ้วนด้วยครับ')
+            else if(err.message === 'no name reg'){
+                alert('กรุณากรอก ชื่อจริงและนาสกุล ให้ครบถ้วนด้วยครับ')
             }
 
-            else if(error.message == 'no email'){
-                alert('กรุณากรอก Email ด้วยครับ')
+            else if(err.message === 'no email,password reg'){
+                alert('กรุณากรอก email และ Password ให้ครบถ้วนด้วยครับ')
             }
 
-            else if(error.message == 'no password'){
-                alert('กรุณากรอก Password ด้วยครับ')
+            else if(err.message === 'no name log'){
+                alert('กรุณากรอก ชื่อจริง ให้ถูกต้องด้วยครับ')
             }
-            
+
+            else if(err.message === 'no email,password log'){
+                alert('กรุณากรอก email และ Password ให้ถูกต้องด้วยครับ ')
+            }
+
             else{
-                alert('เกิดข้อผิดพลาดในการ Sign Up')
+                alert('เกิดข้อผิดพลาดบางอย่างกับ Server')
             }
 
         }

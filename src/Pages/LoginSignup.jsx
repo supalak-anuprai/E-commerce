@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import './CSS/LoginSignup.css'
 import { ShopContext } from '../Context/ShopContext'

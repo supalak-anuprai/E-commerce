@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react'
+import {useContext} from 'react'
 import { Link } from 'react-router-dom';
 import './CSS/RegisterSignup.css'
 import { ShopContext } from '../Context/ShopContext';
@@ -8,7 +8,7 @@ function RegisterSignup() {
     const { handleSubmit, formData, handleChange } = useContext(ShopContext)
 
   return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} data-type='register'>
             <div className='registersignup'>
                 <div className="registersignup-container">
                     <h1>Sign Up</h1>

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import './CartItems.css'
 import { ShopContext } from '../../Context/ShopContext'
 import remove_icon from '../Assets/cart_cross_icon.png'
@@ -18,9 +18,9 @@ function CartItems() {
             <p>Remove</p>
         </div>
         <hr />
-        {all_product.map((e) => {
+        {all_product.map((e, i) => {
             if(cartItems[e.id] > 0){
-                return <div>
+                return <div key={i}>
                             <div className="cartitems-format cartitems-format-main">
                                 <Link to={`/product/${e.id}`}><img src={e.image} alt="" onClick={scrollToTop} className='carticon-product-icon' /></Link>
                                 <p>{e.name}</p>
